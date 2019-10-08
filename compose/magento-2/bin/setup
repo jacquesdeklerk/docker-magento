@@ -74,7 +74,7 @@ bin/clinotty bin/magento deploy:mode:set developer
 bin/clinotty bin/magento indexer:reindex
 
 echo "Forcing deploy of static content to speed up initial requests..."
-bin/clinotty bin/magento setup:static-content:deploy -f 
+bin/clinotty bin/magento setup:static-content:deploy -f
 
 echo "Enabling Redis for cache..."
 bin/clinotty bin/magento setup:config:set --no-interaction --cache-backend=redis --cache-backend-redis-server=redis --cache-backend-redis-db=0
@@ -91,6 +91,10 @@ bin/clinotty bin/magento cache:flush
 echo "Copying files from container to host after install..."
 bin/copyfromcontainer app
 bin/copyfromcontainer vendor
+
+echo "Copying files from host to container after install..."
+cp deployVeniaSampleData.sh src/
+bin/copytocontainer deployVeniaSampleData.sh
 
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
